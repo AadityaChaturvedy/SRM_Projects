@@ -1,0 +1,11 @@
+
+        System.out.println("Camera opened: " + camera.isOpened());
+        while (running) {
+            if (camera.read(frame)) {
+                System.out.println("Read frame: " + frame.width() + "x" + frame.height());
+                processFrame(frame);
+            } else {
+                System.out.println("Failed to read frame!");
+            }
+        }
+

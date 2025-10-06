@@ -1,0 +1,52 @@
+[
+  {
+    "question": "How often do you forget conversations you had just a few hours ago?",
+    "options": ["Never", "Rarely", "Sometimes", "Frequently"],
+    "category": "memory"
+  },
+  {
+    "question": "Do you have trouble remembering appointments or important dates?",
+    "options": ["No, I remember well", "Sometimes I forget", "Often forget", "Always need reminders"],
+    "category": "memory"
+  },
+  {
+    "question": "How often do you lose track of what day it is or where you are?",
+    "options": ["Never", "Rarely", "Sometimes", "Often"],
+    "category": "orientation"
+  },
+  {
+    "question": "Do you have difficulty following a familiar recipe or managing finances?",
+    "options": ["No difficulty", "Minor issues", "Moderate difficulty", "Major problems"],
+    "category": "daily_activities"
+  },
+  {
+    "question": "How often do you have trouble finding the right words when speaking?",
+    "options": ["Never", "Occasionally", "Frequently", "Always struggling"],
+    "category": "language"
+  },
+  {
+    "question": "Do you misplace items and have trouble retracing your steps to find them?",
+    "options": ["Rarely happens", "Sometimes", "Often", "Almost daily"],
+    "category": "memory"
+  },
+  {
+    "question": "Have you noticed changes in your mood or personality recently?",
+    "options": ["No changes", "Minor changes", "Noticeable changes", "Significant changes"],
+    "category": "behavioral"
+  },
+  {
+    "question": "Do you have trouble making decisions that you used to make easily?",
+    "options": ["No trouble", "Sometimes hesitant", "Often confused", "Cannot decide alone"],
+    "category": "cognitive"
+  },
+  {
+    "question": "How often do you repeat the same story or question within a short time?",
+    "options": ["Never", "Rarely", "Sometimes", "Frequently"],
+    "category": "memory"
+  },
+  {
+    "question": "Do you have difficulty following conversations in groups?",
+    "options": ["No difficulty", "Sometimes lost", "Often confused", "Cannot follow"],
+    "category": "cognitive"
+  }
+]

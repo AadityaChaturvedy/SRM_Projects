@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" styleClass="form-container" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label styleClass="section-title" text="Payment Required"/>
+
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints minWidth="100"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+
+        <Label text="Amount Due:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+        <Label fx:id="amountLabel" text="₹0.00" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+        <Label text="Payment Method:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+        <ComboBox fx:id="paymentMethodComboBox" styleClass="combo-modern" promptText="Select Method" 
+                 GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    </GridPane>
+
+    <HBox alignment="CENTER_RIGHT" spacing="10">
+        <Button fx:id="payButton" styleClass="btn-primary" text="Pay Now"/>
+    </HBox>
+</VBox>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<VBox styleClass="root" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.parking.controllers.MainController">
+    
+    <!-- Navigation Bar -->
+    <HBox styleClass="navbar" alignment="CENTER_LEFT" spacing="20">
+        <padding>
+            <Insets top="15" right="20" bottom="15" left="20"/>
+        </padding>
+        <Label styleClass="app-icon" text="🅿️"/>
+        <Label styleClass="app-title" text="Smart Parking System"/>
+        
+        <!-- Navigation Links -->
+        <HBox spacing="20" alignment="CENTER_LEFT">
+            <Button fx:id="overviewButton" styleClass="nav-button,nav-button-active" text="Overview" onAction="#showOverview"/>
+            <Button fx:id="reservationsButton" styleClass="nav-button" text="Reservations" onAction="#showReservations"/>
+        </HBox>
+        
+        <Region HBox.hgrow="ALWAYS"/>
+        
+        <!-- Connection Panel -->
+        <HBox styleClass="connection-panel" alignment="CENTER" spacing="10">
+            <padding>
+                <Insets top="8" right="15" bottom="8" left="15"/>
+            </padding>
+            <Label fx:id="connectionStatus" styleClass="status-disconnected" text="●"/>
+            <Label styleClass="status-text" text="Port:"/>
+            <ComboBox fx:id="portSelector" styleClass="combo-modern"/>
+            <Button fx:id="connectButton" styleClass="btn-connect" text="Connect"/>
+        </HBox>
+    </HBox>
+    
+    <!-- Main Content -->
+    <StackPane fx:id="contentArea" VBox.vgrow="ALWAYS">
+        <!-- Overview Content -->
+        <ScrollPane styleClass="content-scroll" fitToWidth="true">
+            <VBox styleClass="main-content" spacing="30">
+                <padding>
+                    <Insets top="30" right="30" bottom="30" left="30"/>
+                </padding>
+            
+            <!-- Statistics Section -->
+            <VBox spacing="20">
+                <Label styleClass="section-title" text="System Statistics"/>
+                <HBox spacing="20">
+                    <VBox styleClass="stat-card,card-primary">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        <Label styleClass="stat-label" text="TOTAL SLOTS"/>
+                        <HBox alignment="BASELINE_LEFT">
+                            <Label fx:id="totalSlots" styleClass="stat-value" text="2"/>
+                            <Label styleClass="stat-unit" text="slots"/>
+                        </HBox>
+                    </VBox>
+                    
+                    <VBox styleClass="stat-card,card-success">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        <Label styleClass="stat-label" text="AVAILABLE"/>
+                        <HBox alignment="BASELINE_LEFT">
+                            <Label fx:id="availableSlots" styleClass="stat-value" text="0"/>
+                            <Label styleClass="stat-unit" text="slots"/>
+                        </HBox>
+                    </VBox>
+                    
+                    <VBox styleClass="stat-card,card-danger">
+                        <padding>
+                            <Insets top="20" right="20" bottom="20" left="20"/>
+                        </padding>
+                        <Label styleClass="stat-label" text="OCCUPIED"/>
+                        <HBox alignment="BASELINE_LEFT">
+                            <Label fx:id="occupiedSlots" styleClass="stat-value" text="0"/>
+                            <Label styleClass="stat-unit" text="slots"/>
+                        </HBox>
+                    </VBox>
+                </HBox>
+            </VBox>
+            
+            <!-- Parking Slots Section -->
+            <VBox spacing="20">
+                <Label styleClass="section-title" text="Parking Slots"/>
+                <FlowPane fx:id="slotsContainer" hgap="20" vgap="20"/>
+            </VBox>
+            
+            <!-- Access Log Section -->
+            <VBox spacing="20">
+                <Label styleClass="section-title" text="Access Log"/>
+                <HBox spacing="10">
+                    <Button fx:id="clearLogButton" styleClass="btn-danger-outline" text="Clear Log"/>
+                    <Region HBox.hgrow="ALWAYS"/>
+                    <ComboBox fx:id="logFilterComboBox" styleClass="combo-modern" promptText="Filter by status"/>
+                </HBox>
+                <TableView fx:id="accessLogTable" styleClass="modern-table" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="timeColumn" text="Time" prefWidth="100"/>
+                        <TableColumn fx:id="cardColumn" text="Card UID" prefWidth="150"/>
+                        <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- System Console -->
+            <VBox spacing="20">
+                <Label styleClass="section-title" text="System Console"/>
+                <TextArea fx:id="consoleOutput" styleClass="console-view" editable="false" wrapText="true" 
+                          prefRowCount="10"/>
+            </VBox>
+            
+        </VBox>
+    </ScrollPane>
+        
+    </StackPane>
+    
+    <!-- Status Bar -->
+    <HBox styleClass="status-bar" alignment="CENTER_LEFT">
+        <padding>
+            <Insets top="8" right="15" bottom="8" left="15"/>
+        </padding>
+        <Label styleClass="status-bar-text" text="System Status: "/>
+        <Label fx:id="systemStatus" styleClass="status-bar-text" text="Initializing..."/>
+    </HBox>
+    
+</VBox>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="16.0" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alzheimer.awareness.view.controllers.QuizController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+
+   <!-- Header -->
+   <HBox alignment="CENTER_LEFT" spacing="10.0">
+      <Label fx:id="questionNumberLabel" styleClass="heading-secondary" text="Question 1 of 10" />
+      <Region HBox.hgrow="ALWAYS" />
+      <ProgressBar fx:id="progressBar" prefWidth="200.0" />
+   </HBox>
+
+   <!-- Quiz Content -->
+   <VBox spacing="20.0" styleClass="card">
+      <Label fx:id="questionLabel" styleClass="heading-secondary" text="Question text will appear here" wrapText="true" />
+
+      <VBox spacing="12.0">
+         <Button fx:id="optionA" alignment="CENTER_LEFT" maxWidth="Infinity" styleClass="quiz-option" text="Option A" wrapText="true" />
+         <Button fx:id="optionB" alignment="CENTER_LEFT" maxWidth="Infinity" styleClass="quiz-option" text="Option B" wrapText="true" />
+         <Button fx:id="optionC" alignment="CENTER_LEFT" maxWidth="Infinity" styleClass="quiz-option" text="Option C" wrapText="true" />
+         <Button fx:id="optionD" alignment="CENTER_LEFT" maxWidth="Infinity" styleClass="quiz-option" text="Option D" wrapText="true" />
+      </VBox>
+
+      <Label fx:id="feedbackLabel" styleClass="body-text" text="Feedback will appear here" visible="false" wrapText="true" />
+   </VBox>
+
+   <!-- Navigation -->
+   <HBox alignment="CENTER" spacing="16.0">
+      <Button fx:id="previousBtn" styleClass="btn-secondary" text="Previous" visible="false" />
+      <Region HBox.hgrow="ALWAYS" />
+      <Button fx:id="nextBtn" styleClass="btn-primary" text="Next" />
+   </HBox>
+
+   <!-- Results Pane -->
+   <VBox fx:id="resultsPane" alignment="CENTER" spacing="16.0" styleClass="card-elevated" visible="false">
+      <Label styleClass="heading-primary" text="Quiz Complete!" />
+      <Label fx:id="scoreLabel" styleClass="score-display" text="Your Score: 8/10" />
+      <Label fx:id="riskLabel" styleClass="body-text" textAlignment="CENTER" wrapText="true" />
+      <Button fx:id="restartBtn" styleClass="btn-primary" text="Take Quiz Again" />
+      <Label fx:id="recommendationLabel" styleClass="body-text" textAlignment="CENTER" wrapText="true"/>
+   </VBox>
+</VBox>

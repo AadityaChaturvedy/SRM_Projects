@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox styleClass="root" spacing="20" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Reservations Table -->
+    <VBox spacing="10" VBox.vgrow="ALWAYS">
+        <Label styleClass="section-title" text="Reservations"/>
+        
+        <TableView fx:id="reservationTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="cardColumn" text="Card UID" prefWidth="100"/>
+                <TableColumn fx:id="slotColumn" text="Slot" prefWidth="70"/>
+                <TableColumn fx:id="startColumn" text="Start Time" prefWidth="150"/>
+                <TableColumn fx:id="endColumn" text="End Time" prefWidth="150"/>
+                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+            </columns>
+            <placeholder>
+                <Label text="No active reservations"/>
+            </placeholder>
+        </TableView>
+    </VBox>
+</VBox>

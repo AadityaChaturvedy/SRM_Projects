@@ -1,0 +1,133 @@
+package com.railway.booking.controller;
+
+import com.railway.booking.model.*;
+import com.railway.booking.repository.*;
+import com.railway.booking.dto.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import jakarta.transaction.Transactional;
+
+import java.util.*;
+
+@RestController
+@RequestMapping("/api")
+@CrossOrigin
+public class RailwayController {
+
+    @Autowired UserRepository userRepo;
+    @Autowired TrainRepository trainRepo;
+    @Autowired BookingRepository bookingRepo;
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody UserDTO req) {
+        if (userRepo.findByUsername(req.getUsername()).isPresent())
+            return ResponseEntity.ok(Map.of("success", false, "msg", "Username exists"));
+
+        User user = new User();
+        user.setUsername(req.getUsername());
+        user.setPassword(req.getPassword());
+        userRepo.save(user);
+
+        return ResponseEntity.ok(Map.of("success", true));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDTO req) {
+        Optional<User> user = userRepo.findByUsernameAndPassword(req.getUsername(), req.getPassword());
+        return ResponseEntity.ok(
+            user.map(u -> Map.of("success", true, "user_id", u.getId()))
+                .orElse(Map.of("success", false, "user_id", null))
+        );
+    }
+
+    @GetMapping("/trains")
+    public List<Train> getTrains(
+        @RequestParam(defaultValue="") String from,
+        @RequestParam(defaultValue="") String to,
+        @RequestParam(defaultValue="") String date
+    ) {
+        return trainRepo.findBySourceContainingIgnoreCaseAndDestinationContainingIgnoreCaseAndDateContainingIgnoreCase(from, to, date);
+    }
+
+    @PostMapping("/train/add")
+    public ResponseEntity<?> addTrain(@RequestBody Train train) {
+        trainRepo.save(train);
+        return ResponseEntity.ok(Map.of("success", true));
+    }
+
+    @PostMapping("/book")
+    @Transactional
+    public ResponseEntity<?> book(@RequestBody BookingRequest req) {
+        Optional<Train> otrain = trainRepo.findById(req.getTrainId());
+        Optional<User> ouser = userRepo.findById(req.getUserId());
+        if (otrain.isEmpty() || ouser.isEmpty())
+            return ResponseEntity.ok(Map.of("success", false, "msg", "Train or user missing."));
+        Train train = otrain.get();
+        if (train.getSeats() < 1)
+            return ResponseEntity.ok(Map.of("success", false, "msg", "No seats available."));
+        train.setSeats(train.getSeats() - 1);
+        trainRepo.save(train);
+        Booking booking = new Booking();
+        booking.setUser(ouser.get());
+        booking.setTrain(train);
+        booking.setStatus("CONFIRMED");
+        bookingRepo.save(booking);
+        return ResponseEntity.ok(Map.of("success", true));
+    }
+
+    @GetMapping("/history/{userId}")
+    public List<Map<String, Object>> userHistory(@PathVariable Integer userId) {
+        Optional<User> ouser = userRepo.findById(userId);
+        if (ouser.isEmpty()) return List.of();
+        List<Booking> bookings = bookingRepo.findByUserOrderByTrain_DateDesc(ouser.get());
+        List<Map<String, Object>> out = new ArrayList<>();
+        for (Booking b : bookings) {
+            Map<String, Object> entry = new HashMap<>();
+            entry.put("id", b.getId());
+            entry.put("status", b.getStatus());
+            entry.put("source", b.getTrain().getSource());
+            entry.put("destination", b.getTrain().getDestination());
+            entry.put("date", b.getTrain().getDate());
+            entry.put("train_id", b.getTrain().getId());
+            out.add(entry);
+        }
+        return out;
+    }
+
+    @PostMapping("/cancel")
+    @Transactional
+    public ResponseEntity<?> cancel(@RequestBody Map<String, Integer> req) {
+        Optional<Booking> ob = bookingRepo.findById(req.get("booking_id"));
+        if (ob.isEmpty()) return ResponseEntity.ok(Map.of("success", false, "msg", "Booking not found"));
+        Booking booking = ob.get();
+        if (!"CONFIRMED".equals(booking.getStatus()))
+            return ResponseEntity.ok(Map.of("success", false, "msg", "Already cancelled"));
+        booking.setStatus("CANCELLED");
+        bookingRepo.save(booking);
+        Optional<Train> otrain = trainRepo.findById(req.get("train_id"));
+        otrain.ifPresent(t -> {
+            t.setSeats(t.getSeats() + 1);
+            trainRepo.save(t);
+        });
+        return ResponseEntity.ok(Map.of("success", true));
+    }
+
+    @GetMapping("/export/{userId}")
+    public ResponseEntity<String> exportCsv(@PathVariable Integer userId) {
+        Optional<User> ouser = userRepo.findById(userId);
+        if (ouser.isEmpty()) return ResponseEntity.ok("");
+        List<Booking> bookings = bookingRepo.findByUserOrderByTrain_DateDesc(ouser.get());
+        StringBuilder sb = new StringBuilder("BookingID,Status,Source,Destination,Date\n");
+        for (Booking b : bookings) {
+            sb.append(b.getId()).append(",");
+            sb.append(b.getStatus()).append(",");
+            sb.append(b.getTrain().getSource()).append(",");
+            sb.append(b.getTrain().getDestination()).append(",");
+            sb.append(b.getTrain().getDate()).append("\n");
+        }
+        return ResponseEntity.ok()
+                .header("Content-Type", "text/csv")
+                .body(sb.toString());
+    }
+}

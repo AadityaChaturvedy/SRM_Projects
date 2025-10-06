@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="16.0" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alzheimer.awareness.view.controllers.HospitalFinderController">
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+
+   <!-- Header -->
+   <Label styleClass="heading-primary" text="Find Alzheimer's Care Centers" />
+
+   <!-- Search Section -->
+   <VBox spacing="12.0" styleClass="card">
+      <Label styleClass="heading-secondary" text="Enter your location" />
+      <HBox spacing="12.0">
+         <TextField fx:id="locationField" promptText="Enter PIN code or city name" HBox.hgrow="ALWAYS" />
+         <Button fx:id="searchBtn" styleClass="btn-primary" text="Search" />
+      </HBox>
+      <Label fx:id="statusLabel" styleClass="body-text" text="Enter a location to find nearby care centers" />
+   </VBox>
+
+   <!-- Filter Section -->
+   <HBox alignment="CENTER_LEFT" spacing="12.0">
+      <Label text="Filter results:" />
+      <ComboBox fx:id="filterCombo" />
+   </HBox>
+
+   <!-- Results Section -->
+   <HBox spacing="16.0" VBox.vgrow="ALWAYS">
+      <!-- Hospital List -->
+      <VBox spacing="8.0" HBox.hgrow="ALWAYS">
+         <Label styleClass="heading-secondary" text="Care Centers" />
+         <ListView fx:id="hospitalList" VBox.vgrow="ALWAYS" />
+      </VBox>
+
+      <!-- Hospital Details -->
+      <VBox fx:id="hospitalDetailsPane" spacing="12.0" styleClass="card" visible="false">
+         <Label styleClass="heading-secondary" text="Details" />
+         <Label fx:id="selectedHospitalName" styleClass="body-text" wrapText="true" />
+         <Label fx:id="selectedHospitalAddress" styleClass="body-text" wrapText="true" />
+         <Label fx:id="selectedHospitalPhone" styleClass="body-text" />
+         <Label fx:id="selectedHospitalDistance" styleClass="distance-label" />
+         <Button styleClass="btn-secondary" text="Get Directions" />
+         <Button styleClass="btn-secondary" text="Add to Favorites" />
+      </VBox>
+   </HBox>
+</VBox>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hostel.controllers.MaintenanceReportController" stylesheets="@/css/style.css">
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="10" styleClass="app-header">
+            <children>
+    
+                <Label text="Maintenance Trend Report" styleClass="app-title" />
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <VBox alignment="CENTER" spacing="20" styleClass="card">
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+            <Label styleClass="field-label" text="Recurring Maintenance Issues" />
+            <ListView fx:id="reportListView" />
+        </VBox>
+    </center>
+</BorderPane>

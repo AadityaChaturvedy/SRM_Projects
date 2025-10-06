@@ -1,0 +1,9 @@
+From,To,Date,Status
+Chennai,Kolkata,2025-10-15,CANCELLED
+Chennai,Kolkata,2025-10-15,CONFIRMED
+Bangalore,Mumbai,2025-10-13,CONFIRMED
+Pune,Chennai,2025-10-12,CONFIRMED
+Chennai,Mumbai,2025-10-11,CANCELLED
+Mumbai,Kolkata,2025-10-11,CANCELLED
+Chennai,Mumbai,2025-10-10,CANCELLED
+Delhi,Chennai,2025-10-10,CANCELLED

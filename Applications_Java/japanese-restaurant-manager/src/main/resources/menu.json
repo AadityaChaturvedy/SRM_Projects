@@ -1,0 +1,52 @@
+[
+  {
+    "name": "Tuna Sushi",
+    "price": 250.00,
+    "description": "Fresh tuna on seasoned rice.",
+    "image_path": "images/tuna_sushi.png",
+    "recipe": {
+      "Tuna": 1,
+      "Sushi Rice": 2
+    }
+  },
+  {
+    "name": "Salmon Sashimi",
+    "price": 350.00,
+    "description": "Sliced raw salmon.",
+    "image_path": "images/salmon_sashimi.png",
+    "recipe": {
+      "Salmon": 2
+    }
+  },
+  {
+    "name": "Avocado Maki",
+    "price": 200.00,
+    "description": "Avocado rolled in nori and rice.",
+    "image_path": "images/avocado_maki.png",
+    "recipe": {
+      "Avocado": 1,
+      "Nori": 1,
+      "Sushi Rice": 2
+    }
+  },
+  {
+    "name": "Udon Noodle Soup",
+    "price": 300.00,
+    "description": "Thick noodles in a savory broth.",
+    "image_path": "images/udon_noodle_soup.png",
+    "recipe": {
+      "Udon Noodles": 2,
+      "Onion": 1
+    }
+  },
+  {
+    "name": "Prawn Tempura",
+    "price": 400.00,
+    "description": "Deep-fried battered prawns.",
+    "image_path": "images/prawn_tempura.png",
+    "recipe": {
+      "Prawn": 2,
+      "Tempura Batter": 1
+    }
+  }
+]

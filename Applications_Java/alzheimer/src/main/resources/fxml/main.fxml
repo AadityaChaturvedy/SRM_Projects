@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" spacing="24.0" styleClass="root" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.alzheimer.awareness.view.controllers.MainController">
+   <padding>
+      <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+   </padding>
+   
+   <Label styleClass="heading-primary" text="Alzheimer's Awareness App" />
+   <Label styleClass="body-text" text="Take a self-assessment and find nearby care centers" textAlignment="CENTER" wrapText="true" />
+   
+   <VBox alignment="CENTER" spacing="16.0" styleClass="card">
+      <Button fx:id="startQuizBtn" minWidth="200.0" styleClass="btn-primary" text="Start Self-Assessment" />
+      <Button fx:id="findHospitalsBtn" minWidth="200.0" styleClass="btn-secondary" text="Find Care Centers" />
+      <Button fx:id="educationalResourcesBtn" minWidth="200.0" styleClass="btn-secondary" text="Educational Resources" />
+      <Button fx:id="viewHistoryBtn" minWidth="200.0" styleClass="btn-secondary" text="View History" />
+   </VBox>
+   
+   <Label styleClass="body-text" text="This assessment is for educational purposes only and should not replace professional medical advice." textAlignment="CENTER" wrapText="true" />
+</VBox>

@@ -1,0 +1,490 @@
+/* Overall Theme */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
+
+body {
+    font-family: 'Nunito Sans', sans-serif;
+    margin: 0;
+    background: linear-gradient(135deg, #e0f7fa 0%, #ccecf6 100%); /* Mint to white gradient */
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: #333;
+    overflow-x: hidden; /* Prevent horizontal scroll from panel shadows */
+}
+
+/* Header Section */
+.dashboard-header {
+    background: linear-gradient(to right, #a7ffeb, #84ffff); /* Mint green gradient */
+    padding: 1rem 0;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 10;
+}
+
+.header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.app-title {
+    font-size: 2.8rem;
+    color: #00796b;
+    margin: 0 1rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+}
+
+.icon {
+    font-size: 2rem;
+    color: #00796b;
+}
+
+/* Main Layout - Loose Grid Style */
+.dashboard-main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    flex-grow: 1;
+    align-items: start; /* Align panels to the top */
+}
+
+@media (min-width: 768px) {
+    .dashboard-main {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1024px) {
+    .dashboard-main {
+        grid-template-columns: 1fr 300px; /* Timetable takes remaining space, side-panels fixed width */
+        grid-template-areas:
+            "timetable side-panels";
+    }
+    .timetable-panel {
+        grid-area: timetable;
+    }
+    .side-panels {
+        grid-area: side-panels;
+        display: flex;
+        flex-direction: column;
+        gap: 2rem; /* Added space between panels */
+        width: 300px; /* Fixed width for side panels */
+    }
+}
+
+/* Panel Styling - Floating Draggable Windows */
+.panel {
+    background-color: #ffffff;
+    border-radius: 18px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e0f2f7;
+    display: flex;
+    flex-direction: column;
+    position: relative; /* For window controls */
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.panel:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+.panel-header {
+    background: linear-gradient(to right, #b2dfdb, #e0f2f7); /* Light green gradient for header bar */
+    padding: 0.8rem 1.5rem;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e0f2f7;
+    cursor: grab; /* Indicate draggable */
+}
+
+.panel-header h2 {
+    font-size: 1.4rem;
+    color: #00796b;
+    margin: 0;
+    font-weight: 700;
+}
+
+.window-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.window-control-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.window-control-btn:hover {
+    opacity: 1;
+}
+
+.minimize { background-color: #ffc107; } /* Amber */
+.maximize { background-color: #4caf50; } /* Green */
+.close { background-color: #f44336; } /* Red */
+
+.panel-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+}
+
+/* Timetable Panel Specifics */
+.semester-toggle {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.semester-button {
+    background-color: #e0f2f7;
+    border: 1px solid #b2dfdb;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #00796b;
+    font-weight: 600;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.semester-button.active {
+    background-color: #00796b;
+    color: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 121, 107, 0.2);
+}
+
+.semester-button:hover:not(.active) {
+    background-color: #c8e6c9;
+}
+
+.timetable-grid {
+    display: grid;
+    grid-template-columns: 0.8fr repeat(5, minmax(80px, 1fr)); /* Time column + 5 flexible day columns */
+    gap: 8px;
+    flex-grow: 1;
+    overflow-x: auto; /* Horizontal scroll for smaller screens */
+    padding-top: 1rem;
+}
+
+.day-header {
+    background-color: #e0f2f7;
+    padding: 0.6rem 0.4rem;
+    border-radius: 15px;
+    font-weight: 700;
+    text-align: center;
+    color: #00796b;
+    font-size: clamp(0.7rem, 2vw, 0.9rem); /* Responsive font size */
+    white-space: nowrap;
+}
+
+.time-label {
+    background-color: #f0f4f8;
+    padding: 0.6rem 0.4rem;
+    border-radius: 15px;
+    font-weight: 600;
+    text-align: center;
+    color: #555;
+    font-size: clamp(0.7rem, 2vw, 0.85rem); /* Responsive font size */
+    white-space: nowrap;
+}
+
+.timetable-cell {
+    background-color: #f8fcfd;
+    border: 1px dashed #b2ebf2;
+    border-radius: 8px;
+    padding: 0.5rem;
+    text-align: center;
+    font-size: clamp(0.7rem, 1.8vw, 0.8rem); /* Responsive font size */
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: clamp(50px, 8vw, 60px); /* Responsive min-height */
+    white-space: normal; /* Allow text to wrap */
+    cursor: pointer;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.timetable-cell:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Subject Block Styling (applied inline by JS) */
+/* Example: background-color: #ffcdd2; color: #b71c1c; border-radius: 8px; font-weight: 600; */
+
+/* Tasks Panel Specifics */
+.priority-tabs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.priority-button {
+    background-color: #e0f2f7;
+    border: 1px solid #b2dfdb;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    color: #00796b;
+    font-weight: 600;
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.priority-button.active[data-priority="high"] {
+    background-color: #ffcdd2; /* Light Red */
+    color: #b71c1c; /* Darker Red */
+    box-shadow: 0 2px 8px rgba(183, 28, 28, 0.2);
+}
+
+.priority-button.active[data-priority="medium"] {
+    background-color: #fff9c4; /* Light Yellow */
+    color: #fbc02d; /* Darker Yellow */
+    box-shadow: 0 2px 8px rgba(251, 192, 45, 0.2);
+}
+
+.priority-button.active[data-priority="low"] {
+    background-color: #c8e6c9; /* Light Green */
+    color: #2e7d32; /* Darker Green */
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.2);
+}
+
+.priority-button:hover:not(.active) {
+    background-color: #e0f2f7;
+}
+
+.task-list {
+    margin-top: 1rem;
+    flex-grow: 1;
+}
+
+.task-item {
+    border-radius: 12px;
+    padding: 0.8rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    position: relative;
+}
+
+.task-item.high {
+    background-color: #ffcdd2; /* Light Red */
+    color: #b71c1c; /* Darker Red */
+    border-color: #ef9a9a;
+}
+
+.task-item.medium {
+    background-color: #fff9c4; /* Light Yellow */
+    color: #fbc02d; /* Darker Yellow */
+    border-color: #fff59d;
+    font-weight: 600; /* Make text bolder */
+}
+
+.task-item.low {
+    background-color: #c8e6c9; /* Light Green */
+    color: #2e7d32; /* Darker Green */
+    border-color: #a5d6a7;
+}
+
+.task-item button {
+    background: none;
+    border: none;
+    color: #ef5350;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-left: 0.5rem;
+}
+
+.add-task, .add-todo {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.add-task input, .add-todo input {
+    flex-grow: 1;
+    padding: 0.6rem;
+    border: 1px solid #b2ebf2;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.add-task input:focus, .add-todo input:focus {
+    border-color: #00796b;
+}
+
+.add-task button, .add-todo button {
+    background-color: #00796b;
+    color: #ffffff;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-task button:hover, .add-todo button:hover {
+    background-color: #004d40;
+    box-shadow: 0 2px 8px rgba(0, 121, 107, 0.3);
+}
+
+/* To-Do List Panel Specifics */
+.todo-item {
+    background-color: #f8fcfd;
+    border: 1px solid #b2ebf2;
+    border-radius: 12px;
+    padding: 0.8rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.todo-item .checkbox-container {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 0.8rem;
+    cursor: pointer;
+}
+
+.todo-item input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.todo-item .checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 50%;
+    border: 1px solid #ccc;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.todo-item input[type="checkbox"]:checked ~ .checkmark {
+    background-color: #4CAF50; /* Green for checked */
+    border-color: #4CAF50;
+}
+
+.todo-item .checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.todo-item input[type="checkbox"]:checked ~ .checkmark:after {
+    display: block;
+}
+
+.todo-item .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.todo-item span {
+    flex-grow: 1;
+}
+
+.todo-item.completed span {
+    text-decoration: line-through;
+    color: #777;
+    opacity: 0.7;
+}
+
+.todo-item .delete-btn {
+    background: none;
+    border: none;
+    color: #ef5350;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-left: auto; /* Push delete button to the right */
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.todo-item .delete-btn:hover {
+    opacity: 1;
+}
+
+.completed-section-header {
+    font-weight: 600;
+    color: #00796b;
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid #e0f2f7;
+    padding-bottom: 0.5rem;
+}
+
+.completed-todo-item {
+    background-color: #f0f4f8;
+    border: 1px solid #e0f2f7;
+    border-radius: 12px;
+    padding: 0.8rem;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
+    color: #777;
+    opacity: 0.8;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.completed-todo-item span {
+    text-decoration: line-through;
+    flex-grow: 1;
+}
+
+.completed-todo-item .check-icon {
+    color: #4CAF50;
+    font-size: 1.2rem;
+    margin-right: 0.8rem;
+}
+
+.completed-todo-item .delete-btn {
+    color: #9e9e9e;
+}

@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
+
+        body {
+          background: linear-gradient(135deg, #e0f7fa 0%, #ccecf6 100%);
+          min-height: 100vh;
+          margin: 0;
+          font-family: 'Segoe UI', 'Arial', sans-serif;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .login-card {
+          background: #fff;
+          border-radius: 10.5px; /* 14px * 0.75 */
+          box-shadow: 0 6px 32px rgba(60, 77, 100, 0.12);
+          padding: 1.875rem 1.875rem 1.5rem 1.875rem; /* 2.5rem * 0.75, 2rem * 0.75 */
+          width: 100%;
+          max-width: 315px; /* 420px * 0.75 */
+          display: flex;
+          flex-direction: column;
+          gap: 1.125rem; /* 1.5rem * 0.75 */
+          border: 1px solid #e2eaf0;
+        }
+
+        .login-title {
+          font-size: 1.725rem; /* 2.3rem * 0.75 */
+          color: #37897e;
+          font-weight: bold;
+          text-align: center;
+          margin-bottom: 0.525rem; /* 0.7rem * 0.75 */
+        }
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.6rem; /* 0.8rem * 0.75 */
+        }
+
+        .password-form-group {
+          margin-bottom: 1.5rem; /* 2rem * 0.75 */
+        }
+
+        .email-form-group {
+          margin-bottom: 1.5rem; /* 2rem * 0.75 */
+        }
+
+        .fullname-form-group {
+          margin-bottom: 1.5rem; /* 2rem * 0.75 */
+        }
+
+        label {
+          color: #4b5d63;
+          font-size: 0.81rem; /* 1.08rem * 0.75 */
+          font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"], /* Added password type here */
+        input[type="email"] {
+          padding: 0.675em 0.75em; /* 0.9em * 0.75, 1em * 0.75 */
+          background: #f6fbfc;
+          border: 1.125px solid #b8ced6; /* 1.5px * 0.75 */
+          border-radius: 4.5px; /* 6px * 0.75 */
+          font-size: 0.8175rem; /* 1.09rem * 0.75 */
+          color: #2d4349;
+          transition: border 0.2s, box-shadow 0.2s;
+          outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="email"]:focus {
+          border-color: #37897e;
+          box-shadow: 0 0 0 1.5px rgba(55, 137, 126, 0.13); /* 2px * 0.75 */
+        }
+
+        ::placeholder {
+          color: #b0c8cc;
+          opacity: 1;
+        }
+
+        .login-btn {
+          background: linear-gradient(90deg, #36cbb1 0%, #55b8fd 100%);
+          color: #fff;
+          font-weight: 600;
+          font-size: 0.825rem; /* 1.1rem * 0.75 */
+          padding: 0.675em 0.75em; /* 0.9em * 0.75, 1em * 0.75 */
+          border-radius: 6px; /* 8px * 0.75 */
+          border: none;
+          cursor: pointer;
+          margin-top: 0.375rem; /* 0.5rem * 0.75 */
+          box-shadow: 0 1.5px 9px rgba(55, 191, 177, 0.11); /* 0 2px 12px * 0.75 */
+          transition: background 0.2s, box-shadow 0.18s;
+          width: 100%;
+        }
+
+        .login-btn:hover,
+        .login-btn:focus {
+          background: linear-gradient(90deg, #25b79f 0%, #459cdf 100%);
+          box-shadow: 0 2.25px 13.5px rgba(55, 191, 177, 0.16); /* 0 3px 18px * 0.75 */
+        }
+
+        .login-footer {
+          margin-top: 0.375rem; /* 0.5rem * 0.75 */
+          background: #f3fbf8;
+          border-radius: 6px; /* 8px * 0.75 */
+          padding: 0.75rem; /* 1rem * 0.75 */
+          text-align: center;
+          font-size: 0.75rem; /* 1rem * 0.75 */
+          border: 1px solid #e2eaf0;
+        }
+
+        .login-footer a {
+          color: #37897e;
+          text-decoration: underline;
+          font-weight: 500;
+          transition: color 0.19s;
+        }
+        .login-footer a:hover,
+        .login-footer a:focus {
+          color: #23a39d;
+        }
+
+        .captcha-text {
+          font-family: 'Comic Sans MS', cursive, sans-serif; /* Playful font */
+          font-size: 1.5em;
+          font-weight: bold;
+          letter-spacing: 3px;
+          color: #37897e;
+          text-shadow: 1px 1px 0px rgba(0,0,0,0.1), 2px 2px 0px rgba(0,0,0,0.05); /* More shadow layers */
+          user-select: none; /* Prevent selection */
+          display: inline-block;
+          transform: rotate(-5deg) skewX(-5deg); /* Increased rotation and added skew */
+          border: 1px dashed #b8ced6;
+          padding: 0.2em 0.5em;
+          border-radius: 4px;
+          background-color: #f6fbfc;
+          background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOCIgaGVpZ2h0PSI4IiB2aWV3Qm94PSIwIDAgOCAzMiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMDAwMDAwIiBmaWxsLW9wYWNpdHk9IjAuMDMiIGZpbGwtcnVsZT0iZXZlbm9kZCI+PHBhdGggZD0iTTggMEgwVjhoOFYwem0wIDhIMFYxNmg4Vjh6bTAgOEgwVjI0aDhWMTZ6bTAgOEgwVjMyaDhWMjR6Ii8+PC9nPg0KPC9zdmc+'); /* Subtle noise background */
+        }

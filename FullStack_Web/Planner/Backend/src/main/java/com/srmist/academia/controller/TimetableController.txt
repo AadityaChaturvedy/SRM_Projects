@@ -1,0 +1,54 @@
+package com.srmist.academia.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.*;
+
+@RestController
+@RequestMapping("/api/timetable")
+@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:3000"})
+public class TimetableController {
+
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> getTimetable(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        // TODO: Add your timetable logic here
+        // 1. Validate user token
+        // 2. Fetch timetable from database
+        // 3. Return timetable data
+
+        List<Map<String, Object>> timetable = new ArrayList<>();
+
+        // Sample data - replace with database query
+        Map<String, Object> class1 = new HashMap<>();
+        class1.put("id", "1");
+        class1.put("subject", "Mathematics");
+        class1.put("day", "Monday");
+        class1.put("startTime", "09:00");
+        class1.put("endTime", "10:30");
+        class1.put("user_email", "demo@example.com");
+        timetable.add(class1);
+
+        return ResponseEntity.ok(timetable);
+    }
+
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> addClass(
+            @RequestBody Map<String, Object> classData,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        // TODO: Add your add class logic here
+        // 1. Validate user token
+        // 2. Validate class data
+        // 3. Save to database
+        // 4. Return created class data
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Class added successfully");
+        response.put("data", classData);
+
+        return ResponseEntity.ok(response);
+    }
+}

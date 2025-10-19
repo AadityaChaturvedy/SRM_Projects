@@ -1,0 +1,53 @@
+package com.srmist.academia.controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.*;
+
+@RestController
+@RequestMapping("/api/calendar")
+@CrossOrigin(origins = {"http://localhost:3000", "http://127.0.0.1:3000"})
+public class CalendarController {
+
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> getEvents(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        // TODO: Add your calendar logic here
+        // 1. Validate user token
+        // 2. Fetch events from database
+        // 3. Return calendar events
+
+        List<Map<String, Object>> events = new ArrayList<>();
+
+        // Sample data - replace with database query
+        Map<String, Object> event1 = new HashMap<>();
+        event1.put("id", "1");
+        event1.put("title", "Study Session");
+        event1.put("date", "2024-01-15");
+        event1.put("description", "Review mathematics concepts");
+        event1.put("user_email", "demo@example.com");
+        events.add(event1);
+
+        return ResponseEntity.ok(events);
+    }
+
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> addEvent(
+            @RequestBody Map<String, Object> eventData,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+
+        // TODO: Add your add event logic here
+        // 1. Validate user token
+        // 2. Validate event data
+        // 3. Save to database
+        // 4. Return created event data
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Event added successfully");
+        response.put("data", eventData);
+
+        return ResponseEntity.ok(response);
+    }
+}

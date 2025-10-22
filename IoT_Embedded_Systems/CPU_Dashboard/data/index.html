@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5-Stage Pipelined CPU Dashboard Serial</title>
+  <link rel="stylesheet" href="dashboard_styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="dashboard_script.js" defer></script>
+</head>
+<body>
+  <div class="app-container">
+    <header class="header">
+      <h1><span class="gradient-text">5-Stage Pipelined CPU</span></h1>
+    </header>
+    </section>
+
+    <main id="main-content">
+      <!-- CPU Mode Toggle -->
+      <div id="cpu-mode-toggle" style="text-align:center;margin-bottom:1rem;">
+        <button id="show-pipelined" class="btn btn-cyan active">5-Stage Pipelined</button>
+        <button id="show-single" class="btn btn-cyan">Single-Cycle</button>
+      </div>
+
+      <!-- Controls Section -->
+      <section class="panel controls-section panel-flex-center">
+        <button id="start-pause-btn" class="btn btn-green">Start / Resume</button>
+        <button id="reset-btn" class="btn btn-red">Reset</button>
+        <div class="speed-control">
+          <label for="speed-slider">Speed:</label>
+          <input id="speed-slider" type="range" min="200" max="3000" step="100" value="1500">
+          <span id="speed-value">1500ms</span>
+        </div>
+        <div>
+          <span class="scenarios-label">Scenarios:</span>
+          <div id="scenarios-panel">
+            <button class="btn-scenario active" data-scenario="default">default</button>
+            <button class="btn-scenario" data-scenario="high_mispredict">high mispredict</button>
+            <button class="btn-scenario" data-scenario="low_mispredict">low mispredict</button>
+            <button class="btn-scenario" data-scenario="high_branch_freq">high branch freq</button>
+            <button class="btn-scenario" data-scenario="low_branch_freq">low branch freq</button>
+            <button class="btn-scenario" data-scenario="worst_case_cpi">worst case cpi</button>
+            <button class="btn-scenario" data-scenario="best_case_cpi">best case cpi</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Stats Cards -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <h3>Cycles Per Instruction (CPI)</h3>
+          <div class="stat-value"><span id="cpi-value">0.000</span></div>
+          <div class="tooltip">Lower is better.</div>
+        </div>
+        <div class="stat-card">
+          <h3>Branch Mispredictions</h3>
+          <div class="stat-value"><span id="mispredictions-value">0</span></div>
+          <div class="tooltip">Total incorrect predictions.</div>
+        </div>
+        <div class="stat-card">
+          <h3>Instructions Executed</h3>
+          <div class="stat-value"><span id="instructions-value">0</span></div>
+          <div class="tooltip">Total processed instructions.</div>
+        </div>
+        <div class="stat-card">
+          <h3>Misprediction Rate</h3>
+          <div class="stat-value"><span id="misprediction-rate-value">0.00</span></div>
+          <div class="tooltip">(Mispredictions / Total Branches)</div>
+        </div>
+      </section>
+
+      <!-- Charts -->
+      <section class="charts-grid">
+        <div class="chart-container">
+          <h3>CPI Over Time</h3>
+          <canvas id="cpi-chart" height="320"></canvas>
+        </div>
+        <div class="chart-container">
+          <h3>Branch Misprediction Rate (%) Over Time</h3>
+          <canvas id="misprediction-chart" height="320"></canvas>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+# macOS system files
+.DS_Store
+
+# Python virtual environments
+venv/
+.venv/
+ENV/
+env/
+*/venv/
+*/.venv/
+
+# Python bytecode/cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# IDE settings and editor folders
+.idea/
+.vscode/
+
+# Build and distribution folders/files
+build/
+dist/
+*.egg-info/
+*.spec
+*.zip
+*.tar.gz
+*.app
+*.exe
+
+# Logs and temp files
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Qt Designer or PyQt specific
+*.qrc
+*.ui
+*.pyc
+
+# User-specific or system-specific
+*.sublime-workspace
+*.sublime-project
+
+# Project artifact folders
+PlantMonitoringSystem/PMS_Files/
+TollSystem/Zip File/
+
+# Ignore compiled binaries or builds that might appear in the future
+**/*.app
+**/*.exe
+**/*.bin
+
+# Ignore legacy or backup UI scripts if needed
+legacy_ui/*~
+
+# Gitignore itself shouldn’t be ignored 😤
+# But feel free to add any personal-use files below

@@ -1,0 +1,242 @@
+/* --- GLOBAL SETUP & THEME VARIABLES --- */
+:root {
+    --font-family: 'Poppins', sans-serif;
+    
+    /* Light Theme */
+    --bg-color: #f4f7fa;
+    --card-color: #ffffff;
+    --text-color: #333333;
+    --text-muted-color: #777777;
+    --border-color: #e2e8f0;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+    --primary-color: #3b82f6;
+    --temp-color: #f59e0b;
+    --hr-color: #ef4444;
+    --success-color: #10b981;
+    --error-color: #ef4444;
+}
+
+body.dark-mode {
+    /* Dark Theme */
+    --bg-color: #121212;
+    --card-color: #1e1e1e;
+    --text-color: #e0e0e0;
+    --text-muted-color: #a0a0a0;
+    --border-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 1.5rem;
+}
+
+/* --- HEADER & CONTROLS --- */
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-header h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+}
+
+.controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.control-btn {
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-muted-color);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.control-btn:hover, .control-btn:focus-visible {
+    background-color: var(--bg-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.control-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+#theme-toggle .moon { display: none; }
+body.dark-mode #theme-toggle .sun { display: none; }
+body.dark-mode #theme-toggle .moon { display: block; }
+
+/* --- GRID LAYOUT --- */
+.dashboard-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+}
+
+/* --- CARDS --- */
+.card {
+    background-color: var(--card-color);
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transition: all 0.3s ease;
+}
+
+.card h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-muted-color);
+}
+
+/* --- STATUS BAR --- */
+.status-bar {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    color: var(--text-muted-color);
+}
+.status-bar.loading { background-color: rgba(59, 130, 246, 0.1); color: var(--primary-color); }
+.status-bar.success { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+.status-bar.error { background-color: rgba(239, 68, 68, 0.1); color: var(--error-color); }
+
+/* --- MONITOR CARDS --- */
+.monitor-card .reading {
+    display: flex;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.monitor-card .value {
+    font-size: 3.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.monitor-card .unit {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+    color: var(--text-muted-color);
+}
+
+.monitor-card .card-footer {
+    font-size: 0.9rem;
+    color: var(--text-muted-color);
+}
+
+.temp-card .value { color: var(--temp-color); }
+.hr-card .value { color: var(--hr-color); }
+.hr-card .icon {
+    font-size: 2rem;
+    margin-right: 1rem;
+    animation-duration: 0.8s;
+    animation-iteration-count: 2;
+}
+
+/* Pulse animation for new heart rate */
+.pulse-animation {
+    animation-name: pulse;
+}
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+/* --- CHART CARD --- */
+.chart-container {
+    position: relative;
+    height: 250px;
+}
+
+/* --- LOG CARD --- */
+.log-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.log-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.9rem;
+}
+
+.log-item:last-child {
+    border-bottom: none;
+}
+
+.log-item .timestamp {
+    color: var(--text-muted-color);
+    width: 40%;
+}
+
+.log-item .reading-value {
+    font-weight: 600;
+    text-align: right;
+    width: 30%;
+}
+
+.log-item.empty {
+    justify-content: center;
+    color: var(--text-muted-color);
+    font-style: italic;
+}
+
+/* --- RESPONSIVENESS --- */
+@media (min-width: 768px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .chart-card {
+        grid-column: 1 / -1; /* Span full width */
+    }
+}
+
+@media (min-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr 1fr 1.5fr; /* Three columns */
+        grid-template-areas:
+            "status status status"
+            "temp   hr     log"
+            "chart  chart  log";
+    }
+    .status-bar { grid-area: status; }
+    .temp-card { grid-area: temp; }
+    .hr-card { grid-area: hr; }
+    .chart-card { grid-area: chart; }
+    .log-card { grid-area: log; }
+
+    .log-container {
+        height: 100%;
+        max-height: 540px; /* Adjust as needed */
+    }
+}

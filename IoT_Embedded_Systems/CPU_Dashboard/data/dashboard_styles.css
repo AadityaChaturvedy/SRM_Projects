@@ -1,0 +1,54 @@
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Roboto','Oxygen','Ubuntu','Cantarell','Fira Sans','Droid Sans','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;background-color:#111827;color:#f9fafb}
+.app-container{max-width:1280px;margin:0 auto;padding:2rem 1.5rem}
+.header{text-align:center;margin-bottom:2rem}
+.header h1{font-size:2.5rem;font-weight:800;letter-spacing:-.025em;margin:0}@media (min-width:768px){.header h1{font-size:3rem}}
+.header .gradient-text{background-image:linear-gradient(to right,#22d3ee,#3b82f6);-webkit-background-clip:text;background-clip:text;color:transparent}
+.header p{margin-top:1rem;font-size:1.125rem;color:#9ca3af}
+.panel{background-color:rgba(31,41,55,.5);padding:1rem;border-radius:1rem;margin-bottom:2rem;border:1px solid rgba(55,65,81,.5)}
+.panel-flex-center{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:1rem}
+.connection-bar .status-text{font-weight:600}
+.status-text.disconnected{color:#9ca3af}
+.status-text.connecting{color:#60a5fa}
+.status-text.connected{color:#4ade80}
+.status-text.error{color:#f87171}
+main.disabled{opacity:.3;pointer-events:none}
+.btn{font-weight:700;padding:.5rem 1rem;border-radius:.5rem;border:none;cursor:pointer;transition:background-color .2s}
+.btn:disabled{background-color:#4b5563;cursor:not-allowed}
+.btn-cyan{background-color:#0891b2;color:#fff}.btn-cyan:hover:not(:disabled){background-color:#0e7490}
+.btn-green{background-color:#16a34a;color:#fff}.btn-green:hover{background-color:#15803d}
+.btn-yellow{background-color:#d97706;color:#fff}.btn-yellow:hover{background-color:#b45309}
+.btn-red{background-color:#dc2626;color:#fff}.btn-red:hover{background-color:#b91c1c}
+.btn-scenario{padding:.25rem .75rem;font-size:.875rem;border-radius:9999px;background-color:#374151;color:#f9fafb;border:none;cursor:pointer}.btn-scenario:hover{background-color:#4b5563}.btn-scenario.active{background-color:#0891b2;color:#fff}
+.scenarios-label{font-weight:600;margin-right:.5rem}
+.controls-section .speed-control{display:flex;align-items:center;gap:.5rem;font-size:.875rem}
+.controls-section .speed-control input[type=range]{width:8rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-bottom:2rem}
+.stat-card{position:relative;background-color:#1f2937;padding:1.5rem;border-radius:1rem;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);border:1px solid rgba(55,65,81,.5);transition:border-color .3s,transform .3s}.stat-card:hover{border-color:rgba(34,211,238,.5);transform:translateY(-4px)}
+.stat-card h3{margin:0;font-size:.875rem;font-weight:500;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em}
+.stat-card .stat-value{margin-top:.5rem;font-size:2.25rem;font-weight:700;color:#f9fafb}
+.stat-card .stat-value .unit{font-size:1.125rem;font-weight:500;color:#d1d5db;margin-left:.25rem}
+.stat-card .tooltip{visibility:hidden;width:max-content;max-width:200px;background-color:#111827;color:#fff;text-align:center;border-radius:6px;padding:8px 12px;position:absolute;z-index:1;bottom:110%;left:50%;transform:translateX(-50%);opacity:0;transition:opacity .3s;font-size:.8rem}.stat-card:hover .tooltip{visibility:visible;opacity:1}
+.charts-grid{display:grid;grid-template-columns:1fr;gap:2rem;margin-bottom:2rem}@media (min-width:1024px){.charts-grid{grid-template-columns:1fr 1fr}}
+.chart-container{background-color:#1f2937;padding:1.5rem;border-radius:1rem;border:1px solid rgba(55,65,81,.5);height:320px}.chart-container h3{margin:0 0 1rem;font-size:1.125rem;font-weight:600;color:#f9fafb}
+
+/* Comparison Table Styles */
+.cpu-comparison-table {
+  width: 100%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  font-size: 1.1em;
+  background: #FFFFFF;
+  box-shadow: 0 0 8px rgba(34,211,238,0.12);
+}
+.cpu-comparison-table th, .cpu-comparison-table td {
+  border: 1px solid #95D5FF;
+  padding: 8px 14px;
+  text-align: center;
+}
+.cpu-comparison-table th {
+  background: #22d3ee;
+  color: #fff;
+}
+.cpu-comparison-table tr:nth-child(even) {
+  background: #F5FCFF;
+}

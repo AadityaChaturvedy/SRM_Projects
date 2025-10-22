@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Smart Greenhouse</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-gradient-start: #e0eafc; --bg-gradient-end: #cfdef3;
+            --card-bg-color: rgba(255, 255, 255, 0.6); --text-color: #1d2b3a;
+            --text-secondary: #5a6a7b; --accent-color: #007aff;
+            --accent-color-hover: #0056b3; --shadow-color: rgba(0, 0, 0, 0.08);
+            --border-color: rgba(255, 255, 255, 0.8); --status-on-color: #34c759;
+            --status-off-color: #ff3b30; --icon-color: #8a99aa;
+            --graph-line-color: #007aff; --flash-color: rgba(255, 214, 10, 0.6);
+        }
+        body.dark-mode {
+            --bg-gradient-start: #16222a; --bg-gradient-end: #3a6073;
+            --card-bg-color: rgba(28, 41, 54, 0.55); --text-color: #f0f2f5;
+            --text-secondary: #a0b0c1; --accent-color: #0a84ff;
+            --accent-color-hover: #3f9eff; --shadow-color: rgba(0, 0, 0, 0.25);
+            --border-color: rgba(255, 255, 255, 0.1); --status-on-color: #30d158;
+            --status-off-color: #ff453a; --icon-color: #a0b0c1;
+            --graph-line-color: #0a84ff; --flash-color: rgba(255, 221, 87, 0.5);
+        }
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; }
+        }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(48, 209, 88, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(48, 209, 88, 0); } 100% { box-shadow: 0 0 0 0 rgba(48, 209, 88, 0); }
+        }
+        @keyframes flash-bright-animation {
+            0% { box-shadow: 0 10px 35px 0 var(--shadow-color); } 50% { box-shadow: 0 10px 45px 10px var(--flash-color); } 100% { box-shadow: 0 10px 35px 0 var(--shadow-color); }
+        }
+        .animate-flash-bright { animation: flash-bright-animation 1.2s ease-in-out; }
+        @keyframes spin {
+            0% { transform: rotate(0deg); } 100% { transform: rotate(300deg); }
+        }
+        .spinner {
+            border: 3px solid rgba(120, 120, 128, 0.3); border-top: 3px solid var(--accent-color);
+            border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite;
+        }
+        body {
+            font-family: 'Inter', sans-serif; background: linear-gradient(-45deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            background-size: 400% 400%; animation: gradient-animation 15s ease infinite; color: var(--text-color);
+            margin: 0; padding: 2rem; min-height: 100vh; box-sizing: border-box;
+        }
+        .container { max-width: 1200px; margin: auto; }
+        .card {
+            background-color: var(--card-bg-color); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            padding: 25px; border-radius: 20px; box-shadow: 0 10px 35px 0 var(--shadow-color);
+            border: 1px solid var(--border-color);
+            display: flex; flex-direction: column;
+            transition: min-height 0.4s ease, transform 0.3s ease, box-shadow 0.3s ease; /* MODIFIED: Added min-height transition */
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px 0 var(--shadow-color); }
+        .hidden { display: none !important; }
+        h1, h2, h3 { font-weight: 700; margin: 0; }
+        h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        h2 { font-size: 1.25rem; color: var(--text-secondary); }
+        h3 { font-size: 1rem; color: var(--text-secondary); font-weight: 500; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .header-controls { display: flex; align-items: center; gap: 1.5rem; }
+        #dashboard-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        
+        /* MODIFIED: Styles for collapsible cards */
+        .data-card { 
+            justify-content: flex-start; 
+            min-height: 130px; /* Default smaller height */
+            cursor: pointer;
+        }
+        .data-card.card-expanded {
+            min-height: 280px; /* Expanded height */
+        }
+        .graph-container {
+            position: relative; flex-grow: 1; margin-top: 1rem;
+            max-height: 0; /* Hidden by default */
+            overflow: hidden;
+            transition: max-height 0.4s ease; /* Smooth transition */
+        }
+        .data-card.card-expanded .graph-container {
+            max-height: 150px; /* Revealed on expand */
+        }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
+        .card-header .text-content { flex-grow: 1; }
+        .card-icon { width: 32px; height: 32px; color: var(--icon-color); }
+        .data-card .value { font-size: 2.5em; font-weight: 700; margin-top: 0.25rem; }
+        .data-card .unit { font-size: 0.5em; font-weight: 500; color: var(--text-secondary); margin-left: 4px; }
+        
+        .control-card { min-height: 150px; }
+        .control-group { display: flex; align-items: center; justify-content: flex-end; gap: 1rem; margin-top: auto; }
+        .control-group .status-text { display: flex; align-items: center; gap: 0.75rem; }
+        .status-indicator { width: 10px; height: 10px; border-radius: 50%; background-color: var(--status-off-color); transition: background-color 0.4s ease; }
+        .pump-on .status-indicator { background-color: var(--status-on-color); animation: pulse-green 2s infinite; }
+        .value.ON { color: var(--status-on-color); }
+        .value.OFF { color: var(--status-off-color); }
+        .control-card.is-loading .status-text, .control-card.is-loading .toggle-switch { display: none; }
+        .control-card.is-loading .spinner { display: block; margin: 0 auto; }
+        .spinner { display: none; }
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 28px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--status-on-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="device-reg-section" class="card hidden">
+             <h2>Welcome!</h2>
+            <p>Please register your device ID.</p>
+            <input type="text" id="device-id-input" placeholder="e.g., DEVICE-001">
+            <button onclick="registerDevice()">Register Device</button>
+            <button onclick="logout()" class="logout-btn" style="margin-left: 10px;">Logout</button>
+        </div>
+
+        <div id="dashboard-section" class="hidden">
+            <header class="header">
+                <div>
+                    <h1 id="dashboard-title">Greenhouse Management</h1>
+                </div>
+                <div class="header-controls">
+                    <p id="lastUpdated">Waiting for data...</p>
+                    <label class="toggle-switch" id="theme-toggle" for="checkbox">
+                        <input type="checkbox" id="checkbox" />
+                        <div class="slider"></div>
+                    </label>
+                    <button onclick="logout()" class="logout-btn">Logout</button>
+                </div>
+            </header>
+            <main id="dashboard-content"></main>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDnkWvfneQSsM7De2-kUT4vaMUOHeTdkrM",
+            authDomain: "smartgreenhouse-25481.firebaseapp.com",
+            databaseURL: "https://smartgreenhouse-25481-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "smartgreenhouse-25481",
+            storageBucket: "smartgreenhouse-25481.appspot.com",
+            messagingSenderId: "663665897586",
+            appId: "1:663665897586:web:889cd667c33f6ab05a12eb"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        
+        let currentDeviceRef = null;
+        let currentDeviceId = null;
+        let charts = {};
+        let chartData = { labels: [] };
+        const MAX_DATA_POINTS = 15;
+        let previousLightStatus = null;
+        
+        const regSection = document.getElementById('device-reg-section');
+        const dashboardSection = document.getElementById('dashboard-section');
+        const themeToggle = document.getElementById('checkbox');
+        
+        const currentTheme = localStorage.getItem('theme');
+        if (currentTheme) {
+            document.body.classList.add(currentTheme);
+            if (currentTheme === 'dark-mode') themeToggle.checked = true;
+        }
+        themeToggle.addEventListener('change', function() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', this.checked ? 'dark-mode' : 'light-mode');
+        });
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                const userDeviceRef = database.ref(`users/${user.uid}/deviceId`);
+                userDeviceRef.on('value', snapshot => {
+                    const deviceId = snapshot.val();
+                    currentDeviceId = deviceId;
+                    if (deviceId) {
+                        regSection.classList.add('hidden');
+                        dashboardSection.classList.remove('hidden');
+                        listenToDevice(deviceId);
+                    } else {
+                        dashboardSection.classList.add('hidden');
+                        regSection.classList.remove('hidden');
+                    }
+                });
+            } else {
+                // Redirect or show login UI
+            }
+        });
+        
+        // NEW: Event listener for expanding/collapsing cards
+        document.getElementById('dashboard-content').addEventListener('click', function(event) {
+            const clickedCard = event.target.closest('.data-card');
+            if (!clickedCard) return; // Exit if the click wasn't on a data-card
+
+            const isAlreadyExpanded = clickedCard.classList.contains('card-expanded');
+
+            // Close all cards first
+            document.querySelectorAll('.data-card').forEach(card => card.classList.remove('card-expanded'));
+
+            // If the clicked card wasn't already open, open it
+            if (!isAlreadyExpanded) {
+                clickedCard.classList.add('card-expanded');
+            }
+        });
+
+        function logout() { auth.signOut(); }
+        
+        function registerDevice() {
+            const deviceId = document.getElementById('device-id-input').value.trim().toUpperCase();
+            if (!deviceId) return alert('Please enter a Device ID.');
+            const user = auth.currentUser;
+            if (user) { database.ref(`users/${user.uid}/deviceId`).set(deviceId); }
+        }
+
+        function listenToDevice(deviceId) {
+            if (currentDeviceRef) currentDeviceRef.off();
+            currentDeviceRef = database.ref(`devices/${deviceId}/data`);
+            
+            currentDeviceRef.on('value', snapshot => {
+                const data = snapshot.val();
+                if (data) {
+                    if (Object.keys(charts).length === 0) {
+                        renderInitialDashboard(data);
+                        initializeCharts(Object.keys(data));
+                    }
+                    updateDashboard(data);
+                } else {
+                    document.getElementById('dashboard-content').innerHTML = `<h2 style="color: var(--text-secondary); text-align: center; grid-column: 1 / -1;">Waiting for initial data from device...</h2>`;
+                    document.getElementById('lastUpdated').textContent = `No data received yet.`;
+                }
+            });
+        }
+        
+        function sendCommand(pump, isChecked) {
+            const commandValue = isChecked ? "ON" : "OFF";
+            if (!currentDeviceId) return;
+            
+            const pumpCardId = pump === 'water_pump' ? 'waterPumpStatus-card' : 'npkPumpStatus-card';
+            const pumpCard = document.getElementById(pumpCardId);
+            if (pumpCard) pumpCard.classList.add('is-loading');
+
+            const commandPath = `devices/${currentDeviceId}/commands/${pump}`;
+            database.ref(commandPath).set(commandValue);
+        }
+
+        function initializeCharts(dataKeys) {
+            const chartOptions = {
+                responsive: true, maintainAspectRatio: false,
+                scales: { 
+                    y: { beginAtZero: true, ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } },
+                    x: { ticks: { color: getComputedStyle(document.body).getPropertyValue('--text-secondary') } }
+                },
+                plugins: { legend: { display: false } },
+                elements: { line: { tension: 0.3, borderColor: getComputedStyle(document.body).getPropertyValue('--graph-line-color'), borderWidth: 2 } }
+            };
+
+            dataKeys.forEach(key => {
+                const chartElement = document.getElementById(`${key}-chart`);
+                if (chartElement) {
+                    chartData[key] = [];
+                    const ctx = chartElement.getContext('2d');
+                    charts[key] = new Chart(ctx, { type: 'line', data: { labels: chartData.labels, datasets: [{ data: chartData[key] }] }, options: chartOptions });
+                }
+            });
+        }
+
+        function renderInitialDashboard(data) {
+            const content = document.getElementById('dashboard-content');
+            const dataMap = {
+                temperature: { title: "Temperature", unit: "°C" }, humidity: { title: "Humidity", unit: "%" },
+                soilMoisture: { title: "Soil Moisture", unit: "%" }, npkLevel: { title: "NPK Level", unit: "%" },
+                lightLevel: { title: "Light", unit: null }, waterPumpStatus: { title: "Water Pump", isControl: true },
+                npkPumpStatus: { title: "NPK Pump", isControl: true }
+            };
+
+            let html = '';
+            for (const key in dataMap) { // Iterate over dataMap to maintain order
+                if (data[key] === undefined) continue;
+                const item = dataMap[key];
+                if (item.isControl) {
+                    html += `
+                        <div class="card control-card" id="${key}-card">
+                            <div class="card-header"><div class="text-content"><h3>${item.title}</h3></div></div>
+                            <div class="control-group">
+                                <div class="status-text"><span class="status-indicator"></span><span class="value" id="${key}-value"></span></div>
+                                <label class="toggle-switch"><input type="checkbox" id="${key}-toggle" onchange="sendCommand('${key === 'waterPumpStatus' ? 'water_pump' : 'npk_pump'}', this.checked)"><span class="slider"></span></label>
+                            </div>
+                            <div class="spinner"></div>
+                        </div>`;
+                } else {
+                     html += `
+                        <div class="card data-card" id="${key}-card">
+                            <div class="card-header">
+                                <div class="text-content"><h3>${item.title}</h3><div class="value" id="${key}-value"></div></div>
+                            </div>
+                            <div class="graph-container"><canvas id="${key}-chart"></canvas></div>
+                        </div>`;
+                }
+            }
+            content.innerHTML = html;
+        }
+
+        function updateDashboard(data) {
+            const dataMap = { temperature: {unit: "°C"}, humidity: {unit: "%"}, soilMoisture: {unit: "%"}, npkLevel: {unit: "%"} };
+            chartData.labels.push(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+            for (const key in data) {
+                if (chartData[key]) chartData[key].push(data[key]);
+            }
+            if (chartData.labels.length > MAX_DATA_POINTS) {
+                chartData.labels.shift();
+                for (const key in data) { if (chartData[key]) chartData[key].shift(); }
+            }
+
+            for (const key in data) {
+                const el = document.getElementById(`${key}-value`);
+                if (!el) continue;
+
+                if (key === 'lightLevel') {
+                    const currentLightStatus = data[key] > 50 ? 'Bright' : 'Dim';
+                    el.textContent = currentLightStatus;
+                    const lightCard = document.getElementById('lightLevel-card');
+                    if (previousLightStatus === 'Dim' && currentLightStatus === 'Bright') {
+                        lightCard.classList.add('animate-flash-bright');
+                        setTimeout(() => lightCard.classList.remove('animate-flash-bright'), 1200);
+                    }
+                    previousLightStatus = currentLightStatus;
+                } else if (key === 'waterPumpStatus' || key === 'npkPumpStatus') {
+                    el.textContent = data[key];
+                    el.className = `value ${data[key]}`;
+                    document.getElementById(`${key}-toggle`).checked = (data[key] === 'ON');
+                    const card = document.getElementById(`${key}-card`);
+                    card.classList.remove('is-loading');
+                    data[key] === 'ON' ? card.classList.add('pump-on') : card.classList.remove('pump-on');
+                } else {
+                    el.innerHTML = `${data[key].toFixed(1)}<span class="unit">${dataMap[key].unit || ''}</span>`;
+                }
+            }
+            
+            for (const key in charts) {
+                charts[key].data.labels = chartData.labels;
+                charts[key].data.datasets[0].data = chartData[key];
+                charts[key].update('none'); // Use 'none' for no animation to improve performance
+            }
+
+            document.getElementById('lastUpdated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+        }
+    </script>
+</body>
+</html>

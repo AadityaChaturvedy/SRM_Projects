@@ -1,0 +1,11 @@
+.DS_Store
+._*
+*.zip
+*.jar
+*.dylib
+udon_noodle_soup.png
+target/
+bin/
+build/
+.idea/
+.vscode/

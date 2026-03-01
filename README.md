@@ -56,6 +56,15 @@ Each project directory includes a detailed `README.md` with setup instructions. 
 
 ---
 
+## 🔐 Security & Configuration
+
+To protect sensitive information, this repository uses environment variables for configuration. 
+
+1.  **Backend Services**: Copy the [`.env.template`](./.env.template) to `.env` in the root or respective project directory and fill in your credentials.
+2.  **IoT/Arduino**: For projects in `IoT_Embedded_Systems`, hardcoded credentials have been redacted. Create a `config.h` file in the project directory using the placeholders provided in the source code.
+
+---
+
 ## 👨‍💻 Engineering Standards
 
 - **Clean Code**: Adherence to SOLID principles and idiomatic coding styles.

@@ -3,7 +3,7 @@
 
 // Access Point credentials
 const char* ap_ssid = "SRAM_Simulator";           // Access Point name
-const char* ap_password = "REDACTED_WIFI";              // AP Password (min 8 characters)
+const char* ap_password = "YOUR_AP_PASSWORD";              // AP Password (min 8 characters)
 
 // Access Point IP configuration
 IPAddress local_ip(192, 168, 4, 1);               // ESP8266 IP address

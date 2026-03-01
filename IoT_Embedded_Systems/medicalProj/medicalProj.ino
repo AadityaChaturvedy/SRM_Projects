@@ -6,6 +6,11 @@
 #include <WiFiUdp.h>
 #include <NTPClient.h>
 
+/* 
+ * SECURITY NOTICE: Hardcoded credentials have been redacted.
+ * To use this project, update the WiFi and Supabase constants below with your own values.
+ */
+
 // --- Pin Definitions ---
 #define ONE_WIRE_BUS D4
 const int PULSE_SENSOR_PIN = A0;
@@ -24,13 +29,13 @@ unsigned long lastBeatTime = 0;
 bool pulseDetected = false;
 
 // --- BPM Smoothing ---
-const int BPM_AVG_WINDOW = 8;                  // Number of beats to average BPM over
-int BPMHistory[BPM_AVG_WINDOW] = {75};         // Start with mid value
-int BPMHistIndex = 0;                          // Index
+const int BPM_AVG_WINDOW = 8;
+int BPMHistory[BPM_AVG_WINDOW] = {75};
+int BPMHistIndex = 0;
 int BPM = 0;
 
 // --- Debounce ---
-const unsigned long MIN_IBI = 300;             // Minimum allowed IBI (prevents double-counting)
+const unsigned long MIN_IBI = 300;
 unsigned long lastDebounceTime = 0;
 
 // --- Temperature Variables ---
@@ -43,21 +48,21 @@ const int SMOOTH_WINDOW = 8;
 int analogHistory[SMOOTH_WINDOW] = {0};
 int analogIndex = 0;
 
-// --- WiFi Credentials ---
-const char* ssid = "AadityaiPhone";
-const char* password = "REDACTED_WIFI";
+// --- WiFi Credentials (REDACTED) ---
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
 
-// --- Supabase API ---
-const char* supabaseUrl = "https://qxxzgqdoifkpfpdleavo.supabase.co/rest/v1/medicos";
-const char* supabaseApiKey = "REDACTED_MED_KEY";
+// --- Supabase API (REDACTED) ---
+const char* supabaseUrl = "https://your-project.supabase.co/rest/v1/medicos";
+const char* supabaseApiKey = "YOUR_SUPABASE_ANON_KEY";
 
-// --- NTP Setup for ISO Time ---
+// --- NTP Setup ---
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800, 60000); // IST offset (+5:30 = 19800 seconds)
+NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800, 60000);
 
 String getISO8601(long epoch) {
   time_t rawTime = epoch;
-  struct tm* ti = gmtime(&rawTime); // UTC time
+  struct tm* ti = gmtime(&rawTime);
   char buf[25];
   snprintf(buf, sizeof(buf), "%04d-%02d-%02dT%02d:%02d:%02dZ",
            ti->tm_year + 1900, ti->tm_mon + 1, ti->tm_mday,
@@ -69,7 +74,6 @@ void setup() {
   Serial.begin(115200);
   tempSensor.begin();
 
-  // --- Connect to WiFi ---
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
@@ -78,7 +82,6 @@ void setup() {
   }
   Serial.println(" Connected!");
 
-  // --- Start NTP ---
   timeClient.begin();
   timeClient.update();
 }
@@ -119,7 +122,6 @@ void sendToSupabase(float temp, int hr) {
 }
 
 void loop() {
-  // Temperature read
   if (millis() - lastTempRequest > TEMP_READ_INTERVAL) {
     lastTempRequest = millis();
     tempSensor.requestTemperatures();
@@ -129,7 +131,6 @@ void loop() {
     }
   }
 
-  // Analog signal smoothing (simple moving average)
   analogHistory[analogIndex % SMOOTH_WINDOW] = analogRead(PULSE_SENSOR_PIN);
   analogIndex++;
   int smoothedPulse = 0;
@@ -138,15 +139,13 @@ void loop() {
   }
   smoothedPulse /= SMOOTH_WINDOW;
 
-  // Heartbeat detection (with debouncing)
   if (smoothedPulse > pulseThreshold && !pulseDetected) {
     unsigned long now = millis();
     unsigned long interval = now - lastBeatTime;
-    if (interval > MIN_IBI) { // debounce: minimum IBI check
+    if (interval > MIN_IBI) {
       IBI = interval;
       lastBeatTime = now;
       int bpm = 60000.0 / IBI;
-      // BPM Smoothing (moving average)
       BPMHistory[BPMHistIndex++ % BPM_AVG_WINDOW] = bpm;
       int sumBPM = 0;
       for (int i = 0; i < BPM_AVG_WINDOW; ++i) sumBPM += BPMHistory[i];

@@ -9,3 +9,7 @@ bin/
 build/
 .idea/
 .vscode/
+
+# Local Secrets
+.env
+config.h

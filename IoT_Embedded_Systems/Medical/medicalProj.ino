@@ -3,8 +3,9 @@
  * @brief This firmware runs on an ESP8266 to create a real-time health monitoring device.
  * It reads data from a DS18B20 temperature sensor and a pulse sensor, processes the data,
  * and sends it to a Supabase backend for storage and visualization.
- * @author [Your Name/Project Group]
- * @date 2025-10-22
+ * 
+ * SECURITY NOTICE: Hardcoded credentials have been redacted.
+ * To use this project, update the WiFi and Supabase constants below with your own values.
  */
 
 #include <OneWire.h>
@@ -51,27 +52,22 @@ const int SMOOTH_WINDOW = 8; // Window size for smoothing the pulse sensor's ana
 int analogHistory[SMOOTH_WINDOW] = {0};
 int analogIndex = 0;
 
-// --- WiFi Credentials ---
-const char* ssid = "AadityaiPhone";
-const char* password = "REDACTED_WIFI";
+// --- WiFi Credentials (REDACTED) ---
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
 
-// --- Supabase API Configuration ---
-// IMPORTANT: Do not expose these in a public repository.
-const char* supabaseUrl = "https://qxxzgqdoifkpfpdleavo.supabase.co/rest/v1/medicos";
-const char* supabaseApiKey = "REDACTED_MED_KEY";
+// --- Supabase API Configuration (REDACTED) ---
+const char* supabaseUrl = "https://your-project.supabase.co/rest/v1/medicos";
+const char* supabaseApiKey = "YOUR_SUPABASE_ANON_KEY";
 
 // --- NTP Client for Accurate Timestamps ---
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", 19800, 60000); // IST offset (+5:30)
 
-/**
- * @brief Main setup function. Initializes sensors, connects to Wi-Fi, and starts the NTP client.
- */
 void setup() {
   Serial.begin(115200);
   tempSensor.begin();
 
-  // --- Connect to WiFi ---
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi");
   while (WiFi.status() != WL_CONNECTED) {
@@ -80,34 +76,25 @@ void setup() {
   }
   Serial.println(" Connected!");
 
-  // --- Start NTP Client ---
   timeClient.begin();
   timeClient.update();
 }
 
-/**
- * @brief Sends the collected temperature and heart rate data to the Supabase backend.
- * @param temp The temperature in degrees Celsius.
- * @param hr The heart rate in BPM.
- */
 void sendToSupabase(float temp, int hr) {
   if (WiFi.status() == WL_CONNECTED) {
-    // Basic data validation before sending
-    if (temp < 20 || temp > 45) return; // Ignore unrealistic temperatures
-    if (hr < 40 || hr > 200) return;   // Ignore unrealistic heart rates
+    if (temp < 20 || temp > 45) return;
+    if (hr < 40 || hr > 200) return;
 
     WiFiClientSecure client;
-    client.setInsecure(); // Use this for development; for production, use certificate validation
+    client.setInsecure();
 
     HTTPClient http;
     http.begin(client, supabaseUrl);
 
-    // Set HTTP headers for Supabase API
     http.addHeader("Content-Type", "application/json");
     http.addHeader("apikey", supabaseApiKey);
     http.addHeader("Authorization", String("Bearer ") + supabaseApiKey);
 
-    // Create the JSON payload
     String payload = "{\"temperature\":" + String(temp, 2) +
                      ",\"heartRate\":" + String(hr) + "}";
 
@@ -127,12 +114,7 @@ void sendToSupabase(float temp, int hr) {
   }
 }
 
-/**
- * @brief Main loop. Reads sensor data, processes it, and sends it to Supabase.
- */
 void loop() {
-  // --- Temperature Reading ---
-  // Read the temperature sensor at a fixed interval
   if (millis() - lastTempRequest > TEMP_READ_INTERVAL) {
     lastTempRequest = millis();
     tempSensor.requestTemperatures();
@@ -142,8 +124,6 @@ void loop() {
     }
   }
 
-  // --- Pulse Sensor Reading and Smoothing ---
-  // Use a moving average to smooth the analog signal from the pulse sensor
   analogHistory[analogIndex % SMOOTH_WINDOW] = analogRead(PULSE_SENSOR_PIN);
   analogIndex++;
   int smoothedPulse = 0;
@@ -152,40 +132,34 @@ void loop() {
   }
   smoothedPulse /= SMOOTH_WINDOW;
 
-  // --- Heartbeat Detection ---
   if (smoothedPulse > pulseThreshold && !pulseDetected) {
     unsigned long now = millis();
     unsigned long interval = now - lastBeatTime;
     
-    // Debounce by checking if the time since the last beat is reasonable
     if (interval > MIN_IBI) {
-      IBI = interval; // Store the Inter-Beat Interval
+      IBI = interval;
       lastBeatTime = now;
-      int bpm = 60000.0 / IBI; // Calculate instantaneous BPM
+      int bpm = 60000.0 / IBI;
       
-      // Smooth the BPM reading with a moving average
       BPMHistory[BPMHistIndex++ % BPM_AVG_WINDOW] = bpm;
       int sumBPM = 0;
       for (int i = 0; i < BPM_AVG_WINDOW; ++i) sumBPM += BPMHistory[i];
       BPM = sumBPM / BPM_AVG_WINDOW;
       
-      // Print the readings to the serial monitor for debugging
       Serial.print("Temperature: ");
       Serial.print(currentTemperatureC);
       Serial.print(" *C  |  Heart Rate (avg): ");
       Serial.print(BPM);
       Serial.println(" BPM");
 
-      // Send the new, valid reading to the backend
       sendToSupabase(currentTemperatureC, BPM);
     }
-    pulseDetected = true; // Mark pulse as detected to prevent re-triggering
+    pulseDetected = true;
   }
 
-  // Reset the pulse detection flag when the signal drops below the threshold
   if (smoothedPulse < pulseThreshold) {
     pulseDetected = false;
   }
 
-  delay(10); // Small delay to keep the system responsive
+  delay(10);
 }

@@ -3,17 +3,25 @@
 #include <ArduinoJson.h>
 #include <DHT.h>
 
+/* 
+ * SECURITY NOTICE: Hardcoded credentials have been redacted.
+ * To use this project, create a file named 'config.h' in this directory with:
+ * #define WIFI_SSID "your_ssid"
+ * #define WIFI_PASSWORD "your_password"
+ * #define FIREBASE_HOST "your-project.firebaseio.com"
+ * #define FIREBASE_AUTH "your-auth-token"
+ */
+
 // --- UNIQUE DEVICE ID ---
-// !!! IMPORTANT: CHANGE THIS FOR EACH ESP32 YOU PROGRAM !!!
 #define DEVICE_ID "DEVICE-001"
 
-// --- Wi-Fi Credentials ---
-const char* ssid = "anusheel";
-const char* password = "REDACTED_WIFI";
+// --- Wi-Fi Credentials (REDACTED) ---
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASSWORD";
 
-// --- Firebase Details ---
-#define FIREBASE_HOST "https://smartgreenhouse-25481-default-rtdb.asia-southeast1.firebasedatabase.app/"
-#define FIREBASE_AUTH "J5G5sAg5RSegr9LT4sFQKHnB5AcC8QxcqUjLlgGD"
+// --- Firebase Details (REDACTED) ---
+#define FIREBASE_HOST "https://your-project.firebasedatabase.app/"
+#define FIREBASE_AUTH "YOUR_FIREBASE_AUTH_TOKEN"
 
 // --- Pin Definitions for ESP32 ---
 #define NPK_PIN         34
@@ -31,7 +39,6 @@ DHT dht(DHT_PIN, DHT_TYPE);
 #define NPK_THRESHOLD   50
 #define SOIL_THRESHOLD  40
 
-// (readPercentage function remains the same)
 int readPercentage(int pin, bool invert = false) {
   int raw = analogRead(pin);
   int pct = map(raw, 0, 4095, 0, 100);
@@ -64,7 +71,6 @@ void setup() {
 }
 
 void loop() {
-  // Sensor reading and relay control logic remains the same...
   int npkPct = readPercentage(NPK_PIN);
   int soilPct = readPercentage(SOIL_PIN);
   int lightPct = readPercentage(LDR_PIN, true);
@@ -79,11 +85,8 @@ void loop() {
   digitalWrite(RELAY_IN2_NPK, !npkLow);
   digitalWrite(RELAY_IN1_WATER, !soilDry);
 
-  // Send data to Firebase
   if (WiFi.status() == WL_CONNECTED) {
     HTTPClient http;
-    
-    // --- MODIFIED: Build the URL with the unique device ID ---
     String path = "/devices/" + String(DEVICE_ID) + "/data";
     String url = String(FIREBASE_HOST) + path + ".json?auth=" + String(FIREBASE_AUTH);
 
@@ -110,5 +113,5 @@ void loop() {
     }
     http.end();
   }
-  delay(5000); // 5 second delay
+  delay(5000);
 }
